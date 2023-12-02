@@ -1,5 +1,5 @@
+use anyhow::{anyhow, Result};
 use std::{fs::read_to_string, path::PathBuf};
-
 ///     --- Day 1: Trebuchet?! ---
 ///
 /// Something is wrong with global snow production, and you've been selected to take a look. The Elves have even given you a map; on it, they've used stars to mark the top fifty locations that are likely to be having problems.
@@ -24,16 +24,23 @@ use std::{fs::read_to_string, path::PathBuf};
 /// In this example, the calibration values of these four lines are 12, 38, 15, and 77. Adding these together produces 142.
 ///
 /// Consider your entire calibration document. What is the sum of all of the calibration values?
-pub fn part1(filepath: &PathBuf) {
+pub fn part1(filepath: &PathBuf) -> Result<()> {
     let mut result = 0;
-    for line in read_to_string(filepath).unwrap().lines() {
-        let left = line.find(char::is_numeric).unwrap();
-        let right = line.rfind(char::is_numeric).unwrap();
-        let concatenated = (10 * line[left..=left].parse::<i32>().unwrap())
-            + line[right..=right].parse::<i32>().unwrap();
+    for line in read_to_string(filepath)?.lines() {
+        let left = line.find(char::is_numeric).ok_or(anyhow!(
+            "Couldn't find a digit in the input string '{}'",
+            line
+        ))?;
+        let right = line.rfind(char::is_numeric).ok_or(anyhow!(
+            "Couldn't find a digit in the input string '{}'",
+            line
+        ))?;
+        let concatenated =
+            (10 * line[left..=left].parse::<i32>()?) + line[right..=right].parse::<i32>()?;
         result += concatenated;
     }
     println!("[Part 1] Sum of calibration values: {}", result);
+    Ok(())
 }
 
 ///     --- Part Two ---
@@ -53,7 +60,7 @@ pub fn part1(filepath: &PathBuf) {
 /// In this example, the calibration values are 29, 83, 13, 24, 42, 14, and 76. Adding these together produces 281.
 ///
 /// What is the sum of all of the calibration values?
-pub fn part2(filepath: &PathBuf) {
+pub fn part2(filepath: &PathBuf) -> Result<()> {
     fn extract_digit(s: &str) -> Option<i32> {
         let len = s.len();
         for (i, c) in s.chars().enumerate() {
@@ -96,7 +103,7 @@ pub fn part2(filepath: &PathBuf) {
                 }
                 _ => {
                     if c.is_numeric() {
-                        return Some(c.to_digit(10).unwrap() as i32);
+                        return Some(c.to_digit(10).expect("This character can't be converted to a digit despite testing as numeric...") as i32);
                     }
                 }
             }
@@ -146,7 +153,7 @@ pub fn part2(filepath: &PathBuf) {
                 }
                 _ => {
                     if c.is_numeric() {
-                        return Some(c.to_digit(10).unwrap() as i32);
+                        return Some(c.to_digit(10).expect("This character can't be converted to a digit despite testing as numeric...") as i32);
                     }
                 }
             }
@@ -155,10 +162,17 @@ pub fn part2(filepath: &PathBuf) {
     }
 
     let mut result = 0;
-    for line in read_to_string(filepath).unwrap().lines() {
-        let left = extract_digit(line).unwrap();
-        let right = rextract_digit(line).unwrap();
+    for line in read_to_string(filepath)?.lines() {
+        let left = extract_digit(line).ok_or(anyhow!(
+            "Couldn't find a number (digit or spelled) in the input string '{}'",
+            line
+        ))?;
+        let right = rextract_digit(line).ok_or(anyhow!(
+            "Couldn't find a number (digit or spelled) in the input string '{}'",
+            line
+        ))?;
         result += (10 * left) + right;
     }
     println!("[Part 2] Sum of calibration values: {}", result);
+    Ok(())
 }

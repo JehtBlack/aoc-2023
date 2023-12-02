@@ -1,5 +1,7 @@
 use std::{collections::HashSet, fs::read_to_string, path::PathBuf, str::FromStr};
 
+use anyhow::{anyhow, Result};
+
 #[derive(PartialEq, Eq, Hash)]
 enum CubeColour {
     Red,
@@ -14,21 +16,21 @@ struct Cube {
 }
 
 impl FromStr for Cube {
-    type Err = String;
+    type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let s = s.to_lowercase();
         let mut iter = s.split_whitespace();
         let count = iter
             .next()
-            .ok_or_else(|| "No count found".to_string())?
+            .ok_or(anyhow!("No count found in '{}'", s))?
             .parse::<u32>()
-            .map_err(|e| format!("Failed to parse count: {}", e))?;
-        let colour = match iter.next().ok_or_else(|| "No colour found".to_string())? {
+            .map_err(|e| anyhow!("Failed to parse count in '{}' error: {}", s, e))?;
+        let colour = match iter.next().ok_or(anyhow!("No colour found in '{}'", s))? {
             "red" => CubeColour::Red,
             "green" => CubeColour::Green,
             "blue" => CubeColour::Blue,
-            _ => return Err("Invalid colour".to_string()),
+            _ => return Err(anyhow!("Invalid colour in '{}'", s)),
         };
         Ok(Cube { colour, count })
     }
@@ -61,7 +63,7 @@ impl FromStr for Cube {
 /// In the example above, games 1, 2, and 5 would have been possible if the bag had been loaded with that configuration. However, game 3 would have been impossible because at one point the Elf showed you 20 red cubes at once; similarly, game 4 would also have been impossible because the Elf showed you 15 blue cubes at once. If you add up the IDs of the games that would have been possible, you get 8.
 ///
 /// Determine which games would have been possible if the bag had been loaded with only 12 red cubes, 13 green cubes, and 14 blue cubes. What is the sum of the IDs of those games?
-pub fn part1(filepath: &PathBuf) {
+pub fn part1(filepath: &PathBuf) -> Result<()> {
     fn max_cube_count(colour: CubeColour) -> u32 {
         match colour {
             CubeColour::Red => 12,
@@ -70,37 +72,43 @@ pub fn part1(filepath: &PathBuf) {
         }
     }
 
-    fn process(line: &str) -> i32 {
-        let (game_id_str, games) = line.split_at(line.find(':').unwrap());
+    fn process(line: &str) -> Result<i32> {
+        let (game_id_str, games) = line.split_at(line.find(':').ok_or(anyhow!(
+            "Expected a ':' character in the input string '{}'",
+            line
+        ))?);
         let id = game_id_str
             .split_whitespace()
             .rev()
             .next()
-            .unwrap()
-            .parse::<i32>()
-            .unwrap();
+            .ok_or(anyhow!(
+                "Expected whitespace in the game id string '{}'",
+                game_id_str
+            ))?
+            .parse::<i32>()?;
         let games = games.trim_start_matches(":").trim();
         for game in games.split(';') {
             let cubes = game
                 .trim_start_matches(";")
                 .trim()
                 .split(',')
-                .map(|s| s.trim_start_matches(",").trim().parse::<Cube>().unwrap())
-                .collect::<HashSet<Cube>>();
+                .map(|s| s.trim_start_matches(",").trim().parse::<Cube>())
+                .collect::<Result<HashSet<Cube>>>()?;
             for cube in cubes {
                 if cube.count > max_cube_count(cube.colour) {
-                    return 0;
+                    return Ok(0);
                 }
             }
         }
-        id
+        Ok(id)
     }
 
     let mut sum = 0;
-    for line in read_to_string(filepath).unwrap().lines() {
-        sum += process(line);
+    for line in read_to_string(filepath)?.lines() {
+        sum += process(line)?;
     }
     println!("[Part 1] Sum of game IDs: {}", sum);
+    Ok(())
 }
 
 ///     --- Part Two ---
@@ -126,18 +134,21 @@ pub fn part1(filepath: &PathBuf) {
 /// The power of a set of cubes is equal to the numbers of red, green, and blue cubes multiplied together. The power of the minimum set of cubes in game 1 is 48. In games 2-5 it was 12, 1560, 630, and 36, respectively. Adding up these five powers produces the sum 2286.
 ///
 /// For each game, find the minimum set of cubes that must have been present. What is the sum of the power of these sets?
-pub fn part2(filepath: &PathBuf) {
-    fn process(line: &str) -> i32 {
+pub fn part2(filepath: &PathBuf) -> Result<()> {
+    fn process(line: &str) -> Result<i32> {
         let (mut min_red, mut min_green, mut min_blue) = (0, 0, 0);
-        let (_game_id_str, games) = line.split_at(line.find(':').unwrap());
+        let (_game_id_str, games) = line.split_at(line.find(':').ok_or(anyhow!(
+            "Expected a ':' character in the input string '{}'",
+            line
+        ))?);
         let games = games.trim_start_matches(":").trim();
         for game in games.split(';') {
             let cubes = game
                 .trim_start_matches(";")
                 .trim()
                 .split(',')
-                .map(|s| s.trim_start_matches(",").trim().parse::<Cube>().unwrap())
-                .collect::<HashSet<Cube>>();
+                .map(|s| s.trim_start_matches(",").trim().parse::<Cube>())
+                .collect::<Result<HashSet<Cube>>>()?;
             for cube in cubes {
                 match cube.colour {
                     CubeColour::Red => {
@@ -152,13 +163,14 @@ pub fn part2(filepath: &PathBuf) {
                 }
             }
         }
-        (min_red * min_green * min_blue) as i32
+        Ok((min_red * min_green * min_blue) as i32)
     }
 
     let mut sum = 0;
     for line in read_to_string(filepath).unwrap().lines() {
         let actual = process(line);
-        sum += actual;
+        sum += actual?;
     }
     println!("[Part 2] Sum of game IDs: {}", sum);
+    Ok(())
 }

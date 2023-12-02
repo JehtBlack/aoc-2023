@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use anyhow::Result;
 use clap::{Parser, ValueEnum};
 use dotenv::dotenv;
 
@@ -86,26 +87,28 @@ struct Cli {
     input: PathBuf,
 }
 
-fn main() {
+fn main() -> Result<()> {
     dotenv().ok();
     let cli = Cli::parse();
     match cli.day {
         Day::Numeric(1) | Day::Name(DayTitles::Trebuchet) => match cli.part {
-            Part::Part1 => day01::part1(&cli.input),
-            Part::Part2 => day01::part2(&cli.input),
+            Part::Part1 => day01::part1(&cli.input)?,
+            Part::Part2 => day01::part2(&cli.input)?,
             Part::All => {
-                day01::part1(&cli.input);
-                day01::part2(&cli.input);
+                day01::part1(&cli.input)?;
+                day01::part2(&cli.input)?;
             }
         },
         Day::Numeric(2) | Day::Name(DayTitles::CubeConundrum) => match cli.part {
-            Part::Part1 => day02::part1(&cli.input),
-            Part::Part2 => day02::part2(&cli.input),
+            Part::Part1 => day02::part1(&cli.input)?,
+            Part::Part2 => day02::part2(&cli.input)?,
             Part::All => {
-                day02::part1(&cli.input);
-                day02::part2(&cli.input);
+                day02::part1(&cli.input)?;
+                day02::part2(&cli.input)?;
             }
         },
         _ => println!("Day {:?} not implemented", cli.day),
     }
+
+    Ok(())
 }
