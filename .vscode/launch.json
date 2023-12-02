@@ -20,7 +20,7 @@
                 }
             },
             "args": [
-                "2",
+                "cube-conundrum",
                 "all",
                 "${workspaceFolder}/data/02/input"
             ],
