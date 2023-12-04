@@ -20,9 +20,9 @@
                 }
             },
             "args": [
-                "cube-conundrum",
+                "gear-ratios",
                 "all",
-                "${workspaceFolder}/data/02/input"
+                "${workspaceFolder}/data/03/input"
             ],
             "cwd": "${workspaceFolder}"
         },

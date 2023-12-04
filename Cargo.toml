@@ -13,3 +13,7 @@ dotenv = { version = "0.15.0", features = ["clap"] }
 lazy_static = "1.4.0"
 maplit = "1.0.2"
 thiserror = "1.0.50"
+
+[profile.dev]
+opt-level = 0
+debug = "full"
