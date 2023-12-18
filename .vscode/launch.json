@@ -20,9 +20,9 @@
                 }
             },
             "args": [
-                "gear-ratios",
+                "scratchcards",
                 "all",
-                "${workspaceFolder}/data/03/input"
+                "${workspaceFolder}/data/04/input"
             ],
             "cwd": "${workspaceFolder}"
         },

@@ -10,6 +10,7 @@ pub mod solver;
 
 mod cube_conundrum;
 mod gear_ratios;
+mod scratchcards;
 mod trebuchet;
 
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd, Eq, Ord, ValueEnum)]
@@ -28,6 +29,7 @@ enum DayTitles {
     Trebuchet,
     CubeConundrum,
     GearRatios,
+    Scratchcards,
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
@@ -125,6 +127,7 @@ fn find_runner(day: u8, part: Part, filepath: &PathBuf) -> Result<()> {
         1 => run_day(Box::new(trebuchet::Trebuchet), part, filepath),
         2 => run_day(Box::new(cube_conundrum::CubeConundrum), part, filepath),
         3 => run_day(Box::new(gear_ratios::GearRatios), part, filepath),
+        4 => run_day(Box::new(scratchcards::Scratchcards), part, filepath),
         _ => Err(anyhow!("Day {} not implemented", day)),
     }
 }
@@ -153,6 +156,7 @@ fn main() -> Result<()> {
         Day::Name(DayTitles::Trebuchet) => find_runner(1, cli.part, &cli.input)?,
         Day::Name(DayTitles::CubeConundrum) => find_runner(2, cli.part, &cli.input)?,
         Day::Name(DayTitles::GearRatios) => find_runner(3, cli.part, &cli.input)?,
+        Day::Name(DayTitles::Scratchcards) => find_runner(4, cli.part, &cli.input)?,
     };
     Ok(())
 }
