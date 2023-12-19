@@ -13,6 +13,7 @@ mod gear_ratios;
 mod if_you_give_a_seed_a_fertilizer;
 mod scratchcards;
 mod trebuchet;
+mod wait_for_it;
 
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd, Eq, Ord, ValueEnum)]
 enum Part {
@@ -32,6 +33,7 @@ enum DayTitles {
     GearRatios,
     Scratchcards,
     IfYouGiveASeedAFertilizer,
+    WaitForIt,
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
@@ -135,6 +137,7 @@ fn find_runner(day: u8, part: Part, filepath: &PathBuf) -> Result<()> {
             part,
             filepath,
         ),
+        6 => run_day(Box::new(wait_for_it::WaitForIt), part, filepath),
         _ => Err(anyhow!("Day {} not implemented", day)),
     }
 }
@@ -165,6 +168,7 @@ fn main() -> Result<()> {
         Day::Name(DayTitles::GearRatios) => find_runner(3, cli.part, &cli.input)?,
         Day::Name(DayTitles::Scratchcards) => find_runner(4, cli.part, &cli.input)?,
         Day::Name(DayTitles::IfYouGiveASeedAFertilizer) => find_runner(5, cli.part, &cli.input)?,
+        Day::Name(DayTitles::WaitForIt) => find_runner(6, cli.part, &cli.input)?,
     };
     Ok(())
 }

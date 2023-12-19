@@ -5,26 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb",
+            "type": "cppvsdbg",
             "request": "launch",
             "name": "Debug executable 'aoc-2023'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--bin=aoc-2023",
-                    "--package=aoc-2023"
-                ],
-                "filter": {
-                    "name": "aoc-2023",
-                    "kind": "bin"
-                }
-            },
+            "program": "${workspaceRoot}/target/debug/aoc-2023.exe",
             "args": [
-                "if-you-give-a-seed-a-fertilizer",
+                "wait-for-it",
                 "all",
-                "${workspaceFolder}/data/05/input"
+                "${workspaceFolder}/data/06/input"
             ],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "preLaunchTask": "rust: cargo build",
         },
         {
             "type": "lldb",
