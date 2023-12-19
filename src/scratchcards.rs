@@ -210,3 +210,26 @@ impl Solver for PartTwo {
         Ok(scratchcard_id_occurances.values().cloned().sum::<i32>())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one() -> anyhow::Result<()> {
+        let filepath = std::path::PathBuf::from("data/04/input");
+        let solver = PartOne;
+        let solution = solver.get_solution(&filepath)?;
+        assert_eq!(solution, 15268);
+        Ok(())
+    }
+
+    #[test]
+    fn test_part_two() -> anyhow::Result<()> {
+        let filepath = std::path::PathBuf::from("data/04/input");
+        let solver = PartTwo;
+        let solution = solver.get_solution(&filepath)?;
+        assert_eq!(solution, 6283755);
+        Ok(())
+    }
+}

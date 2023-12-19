@@ -211,3 +211,26 @@ impl Solver for PartTwo {
         Ok(result)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one() -> anyhow::Result<()> {
+        let filepath = std::path::PathBuf::from("data/01/input");
+        let solver = PartOne;
+        let solution = solver.get_solution(&filepath)?;
+        assert_eq!(solution, 54605);
+        Ok(())
+    }
+
+    #[test]
+    fn test_part_two() -> anyhow::Result<()> {
+        let filepath = std::path::PathBuf::from("data/01/input");
+        let solver = PartTwo;
+        let solution = solver.get_solution(&filepath)?;
+        assert_eq!(solution, 55429);
+        Ok(())
+    }
+}

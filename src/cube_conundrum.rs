@@ -180,7 +180,7 @@ impl Solver for PartTwo {
         }
 
         let mut sum = 0;
-        for line in read_to_string(filepath).unwrap().lines() {
+        for line in read_to_string(filepath)?.lines() {
             let actual = process(line);
             sum += actual?;
         }
@@ -206,5 +206,28 @@ impl FromStr for Cube {
             _ => return Err(anyhow!("Invalid colour in '{}'", s)),
         };
         Ok(Cube { colour, count })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one() -> anyhow::Result<()> {
+        let filepath = std::path::PathBuf::from("data/02/input");
+        let solver = PartOne;
+        let solution = solver.get_solution(&filepath)?;
+        assert_eq!(solution, 2348);
+        Ok(())
+    }
+
+    #[test]
+    fn test_part_two() -> anyhow::Result<()> {
+        let filepath = std::path::PathBuf::from("data/02/input");
+        let solver = PartTwo;
+        let solution = solver.get_solution(&filepath)?;
+        assert_eq!(solution, 76008);
+        Ok(())
     }
 }

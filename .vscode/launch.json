@@ -20,9 +20,9 @@
                 }
             },
             "args": [
-                "scratchcards",
+                "if-you-give-a-seed-a-fertilizer",
                 "all",
-                "${workspaceFolder}/data/04/input"
+                "${workspaceFolder}/data/05/input"
             ],
             "cwd": "${workspaceFolder}"
         },
