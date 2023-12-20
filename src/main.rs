@@ -8,6 +8,7 @@ use solver::{MultiSolver, Solver};
 
 pub mod solver;
 
+mod camel_cards;
 mod cube_conundrum;
 mod gear_ratios;
 mod if_you_give_a_seed_a_fertilizer;
@@ -34,6 +35,7 @@ enum DayTitles {
     Scratchcards,
     IfYouGiveASeedAFertilizer,
     WaitForIt,
+    CamelCards,
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
@@ -138,6 +140,7 @@ fn find_runner(day: u8, part: Part, filepath: &PathBuf) -> Result<()> {
             filepath,
         ),
         6 => run_day(Box::new(wait_for_it::WaitForIt), part, filepath),
+        7 => run_day(Box::new(camel_cards::CamelCards), part, filepath),
         _ => Err(anyhow!("Day {} not implemented", day)),
     }
 }
@@ -169,6 +172,7 @@ fn main() -> Result<()> {
         Day::Name(DayTitles::Scratchcards) => find_runner(4, cli.part, &cli.input)?,
         Day::Name(DayTitles::IfYouGiveASeedAFertilizer) => find_runner(5, cli.part, &cli.input)?,
         Day::Name(DayTitles::WaitForIt) => find_runner(6, cli.part, &cli.input)?,
+        Day::Name(DayTitles::CamelCards) => find_runner(7, cli.part, &cli.input)?,
     };
     Ok(())
 }

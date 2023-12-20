@@ -10,9 +10,9 @@
             "name": "Debug executable 'aoc-2023'",
             "program": "${workspaceRoot}/target/debug/aoc-2023.exe",
             "args": [
-                "wait-for-it",
+                "camel-cards",
                 "all",
-                "${workspaceFolder}/data/06/input"
+                "${workspaceFolder}/data/07/input"
             ],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
